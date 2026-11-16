@@ -1,21 +1,21 @@
-
 #!/usr/bin/env bash
-# Displays information about subdomains
+# Displays information about the subdomains of a domain using dig and awk
 
-domain=$1
-
-get_subdomain_info() {
-    subdomain=$1
-    result=$(dig +noall +answer "$subdomain.$domain" | awk 'NR==1 {print $4, $5}')
-    read -r record_type destination <<< "$result"
-    echo "The subdomain $subdomain is a $record_type record and points to $destination"
+display_info() {
+    local domain="$1"
+    local sub="$2"
+    dig +noall +answer "$sub.$domain" | head -n 1 | awk -v s="$sub" '{print "The subdomain " s " is a " $4 " record and points to " $5}'
 }
 
-if [ "$#" -eq 2 ]; then
-    get_subdomain_info "$2"
-else
-    for subdomain in www lb-01 web-01 web-02
+if [ "$#" -eq 1 ]
+then
+    for sub in www lb-01 web-01 web-02
     do
-        get_subdomain_info "$subdomain"
+        display_info "$1" "$sub"
     done
+elif [ "$#" -ge 2 ]
+then
+    display_info "$1" "$2"
+else
+    echo "Usage: 0-world_wide_web domain [subdomain]"
 fi
