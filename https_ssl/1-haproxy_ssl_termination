@@ -1,8 +1,8 @@
-
 global
     log /dev/log local0
     log /dev/log local1 notice
     daemon
+    tune.ssl.default-dh-param 2048
 
 defaults
     log global
@@ -22,5 +22,5 @@ backend web_servers
     mode http
     balance roundrobin
     option forwardfor
-    server web-01 18.171.210.130:80 check
-    server web-02 35.176.93.193:80 check
+    server 7330-web-01 3.8.236.234:80 check
+    server 7330-web-02 18.175.122.99:80 check
